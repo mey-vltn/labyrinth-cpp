@@ -6,12 +6,12 @@
 class Tresor : public Case {
     private:
     
-    int valeur;
+    int valeur ;
 
     public :
 
-    Tresor(int valeur);
-    char afficher();
+    Tresor(int valeur) ;
+    char afficher() ;
 };
 
 #endif

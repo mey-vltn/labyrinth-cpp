@@ -5,7 +5,7 @@
 
 class Mur : public Case {
     public :
-    char afficher();
+        char afficher();
 };
 
 #endif
