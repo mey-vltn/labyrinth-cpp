@@ -8,7 +8,6 @@
 
 using namespace std ;  
 
-template <typename Case>
 class Donjon {
     
     private:
