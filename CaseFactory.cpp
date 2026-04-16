@@ -6,18 +6,36 @@
 #include "Piege.h"
 
 enum TypeCase {
-    MUR = new Mur(),
-    PASSAGE = new Passage(),
-    TRESOR = new Tresor(),
-    MONSTRE = new Monstre(),
-    PIEGE = new Piege()
-
-}
+    MUR,
+    PASSAGE,
+    TRESOR,
+    MONSTRE,
+    PIEGE
+};
 
 class CaseFactory {
 
     public:
-        Case* creerCase (TypeCase tc) {
-
+        static Case* creerCase (TypeCase type) {
+            switch(type) {
+                
+                case MUR :
+                    return new Mur() ;
+                
+                case PASSAGE :
+                    return new Mur() ;
+                
+                case TRESOR :
+                    return new Mur() ;
+                
+                case MONSTRE :
+                    return new Mur() ;
+                
+                case PIEGE :
+                    return new Mur() ;  
+                
+                default :
+                    return nullptr ;
+            }
         }
 };
