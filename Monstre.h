@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Case.h" 
+#include "TypeCase.h"
 
 class Monstre : public Case {
 
@@ -13,7 +14,8 @@ class Monstre : public Case {
 
     public:
         Monstre(int valeur) ;
-        char afficher () override ;
+        char afficher() const override ;
+        TypeCase getTypeCase() const override ;
 };
 
 

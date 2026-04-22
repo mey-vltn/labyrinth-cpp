@@ -13,18 +13,27 @@ using namespace std;
 class Aventurier {
 
     private:
-        std::pair<int,int> position ;
+        int x, y ;
         int ptsVie ;
-        vector<Tresor> inventaire ;
-
+        int nbTresors ;
+    
     public:
-        // types à changer probablement 
+        // getters
+        int getX() const ;
+        int getY() const ;
+        int getPV() const ;
+        int getNbTresors() const ;
+
+        
         void deplacer(int nx, int ny) ;
+        void pertePV(int degats) ; 
+        void ajouterTresor() ;
+
         void resoudreCase(Case* c) ;
+
         bool estVivant() const ;
         void afficherStatut() const ;
-        void boucleDeJeu (Donjon& d) ;
-        void afficherPosition () const ;
+    
 };
 
 #endif

@@ -1,12 +1,5 @@
 #include "Case.h"
-
-enum TypeCase {
-    MUR,
-    PASSAGE,
-    TRESOR,
-    MONSTRE,
-    PIEGE
-};
+#include "TypeCase.h"
 
 class CaseFactory {
 

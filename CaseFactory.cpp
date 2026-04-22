@@ -7,25 +7,28 @@
 #include "Monstre.h"
 #include "Piege.h"
 
+#include <stdexcept>
+
 Case* CaseFactory::creerCase(TypeCase type) {
+    
     switch(type) {
         
-        case MUR :
+        case TypeCase::MUR :
             return new Mur();
         
-        case PASSAGE :
+        case TypeCase::PASSAGE :
             return new Passage();
         
-        case TRESOR :
+        case TypeCase::TRESOR :
             return new Tresor(10);
         
-        case MONSTRE :
+        case TypeCase::MONSTRE :
             return new Monstre(10);
         
-        case PIEGE :
+        case TypeCase::PIEGE :
             return new Piege(10);  
         
         default :
-            return nullptr;
+            throw std::invalid_argument("TypeCase invalide");;
     }
 };

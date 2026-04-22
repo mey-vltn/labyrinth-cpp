@@ -2,7 +2,10 @@
 
 Monstre::Monstre (int pv) : pv(pv) {}
 
-char Monstre::afficher () {
-    char c = 'M' ;
-    return c ;
+char Monstre::afficher() const {
+    return 'M' ;
+}
+
+TypeCase Monstre::getTypeCase() const {
+    return TypeCase::MONSTRE ;
 }

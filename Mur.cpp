@@ -1,6 +1,9 @@
 #include "Mur.h"
 
-char Mur::afficher () {
-    char c = '#' ;
-    return c ;
+char Mur::afficher () const {
+    return '#' ;
+}
+
+TypeCase Mur::getTypeCase() const {
+    return TypeCase::MUR ;
 }

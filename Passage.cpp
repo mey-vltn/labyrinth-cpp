@@ -1,7 +1,10 @@
 #include "Passage.h"
 
 
-char Passage::afficher () {
-    char c = ' ' ;
-    return c ;
+char Passage::afficher() const {
+    return ' ' ;
+}
+
+TypeCase Passage::getTypeCase() const {
+    return TypeCase::PASSAGE ;
 }

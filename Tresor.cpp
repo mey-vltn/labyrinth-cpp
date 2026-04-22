@@ -2,7 +2,11 @@
 
 Tresor::Tresor (int valeur) : valeur(valeur) {}
 
-char Tresor::afficher () {
+char Tresor::afficher () const {
     char c = 'T' ;
     return c ;
+}
+
+TypeCase Tresor::getTypeCase() const {
+    return TypeCase::TRESOR ;
 }

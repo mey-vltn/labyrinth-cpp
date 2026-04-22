@@ -13,7 +13,8 @@ class Piege : public Case {
 
     public:
         Piege(int degats) ;
-        char afficher () override ;
+        char afficher () const override ;
+        TypeCase getTypeCase() const override ;
 };
 
 
