@@ -6,7 +6,9 @@ enum class TypeCase {
     PASSAGE,
     TRESOR,
     MONSTRE,
-    PIEGE
+    PIEGE,
+    ENTREE,
+    SORTIE
 } ;
 
 #endif

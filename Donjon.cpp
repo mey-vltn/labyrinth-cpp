@@ -1,29 +1,37 @@
 #include "Donjon.h"
 #include "CaseFactory.h"
 #include <random>
+#include <bits/stdc++.h>
+
+using namespace std;
 
 
-void Donjon::afficher() {
+void Donjon::afficher(int ax, int ay) {
     
     // contour du haut
     cout << '+';
-    for (int j = 0; j < largeur; j++) cout << '-';
-    cout << '+' << endl;
+    for (int j = 0; j < largeur; j++) cout << " -";
+    cout << "+" << endl;
 
     // contenu
     for (int i = 0; i < hauteur; i++) {
         cout << '|'; // bord de gauche
         for (int j = 0; j < largeur; j++) {
-            Case* c = grille[i][j];
-            if (c != nullptr) cout << c->afficher();
+            if (i == ax && j == ay) {
+                cout << "@ ";}
+            else{
+                Case* c = grille[i][j];
+                if (c != nullptr) cout << c->afficher() << " ";
+            }
+            
         }
         cout << '|' << endl; // bord droit + retour à la ligne
     }
 
     // contour du bas
     cout << '+';
-    for (int j = 0; j < largeur; j++) cout << '-';
-    cout << '+' << endl;
+    for (int j = 0; j < largeur; j++) cout << " -";
+    cout << "+" << endl;
 }
 
 const int DIRECTIONS[4][2] = {
@@ -68,7 +76,10 @@ void Donjon::genererLabyrinthe(int x, int y){
 }
 
 
+
 void Donjon::generer(int l, int h) {
+    largeur = l ;
+    hauteur = h ;
     largeur = l ;
     hauteur = h ;
 
@@ -85,6 +96,13 @@ void Donjon::generer(int l, int h) {
 
     placerElements();
 
+    grille[1][1] = CaseFactory::creerCase(TypeCase::ENTREE);
+    // ici on veut toujours que la sortie soit accessible : il faut que ce soit sur une case impair parce qu'on commence sur (1,1) et on saute de 2 en 2.
+    int si = (hauteur - 2) % 2 == 0 ? hauteur - 3 : hauteur - 2;
+    int sj = (largeur - 2) % 2 == 0 ? largeur - 3 : largeur - 2;
+    grille[si][sj] = CaseFactory::creerCase(TypeCase::SORTIE);
+
+
 }
 
 
@@ -94,6 +112,10 @@ void Donjon::placerElements() {
 
     for (int i = 0; i < hauteur; i++) {
         for (int j = 0; j < largeur; j++) {
+
+            TypeCase type = grille[i][j]->getTypeCase();
+            if (type == TypeCase::ENTREE || type == TypeCase::SORTIE) continue;
+
             if (grille[i][j]->getTypeCase() == TypeCase::PASSAGE) {
                 int r = dist(rng);
                 if      (r < 5)  grille[i][j] = CaseFactory::creerCase(TypeCase::TRESOR);
@@ -105,14 +127,14 @@ void Donjon::placerElements() {
 }
 
 
-
+// j'ai inversé les x et y dans cette partie parce que ça portait un peu à confusion
 
 Case* Donjon::getCase (int x, int y) const {
-    return grille[y][x] ;
+    return grille[x][y] ;
 }
 
 void Donjon::remplacerCase(int x, int y, Case* newCase) {
-    delete grille[y][x] ;
-    grille[y][x] = newCase ;
+    delete grille[x][y] ;
+    grille[x][y] = newCase ;
 }
 

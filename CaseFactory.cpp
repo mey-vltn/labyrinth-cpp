@@ -6,6 +6,8 @@
 #include "Tresor.h"
 #include "Monstre.h"
 #include "Piege.h"
+#include "Entree.h"
+#include "Sortie.h"
 
 #include <stdexcept>
 
@@ -27,6 +29,12 @@ Case* CaseFactory::creerCase(TypeCase type) {
         
         case TypeCase::PIEGE :
             return new Piege(10);  
+        
+        case TypeCase::ENTREE:
+            return new Entree();
+
+        case TypeCase::SORTIE:
+            return new Sortie();
         
         default :
             throw std::invalid_argument("TypeCase invalide");;

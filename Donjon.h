@@ -23,7 +23,7 @@ class Donjon {
         void generer (int largeur, int hauteur) ;
         void genererLabyrinthe(int x, int y);
         void placerElements();
-        void afficher () ;
+        void afficher (int ax, int ay) ;
         vector<pair<int,int>> trouverChemin () ;
 
         void remplacerCase(int x, int y, Case* newCase) ;

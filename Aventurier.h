@@ -36,6 +36,8 @@ class Aventurier {
 
         bool estVivant() const ;
         void afficherStatut() const ;
+
+        void boucledeJeu(Donjon& d);
     
 };
 

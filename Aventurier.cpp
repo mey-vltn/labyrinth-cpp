@@ -5,7 +5,6 @@
 #include <iostream>
 
 
-
 // CONSTRUCTEUR
 Aventurier::Aventurier (int xInit, int yInit) 
     : x(xInit), y(yInit), ptsVie(100), nbTresors(0) {}
@@ -101,11 +100,60 @@ void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
             pertePV(10);
             d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
             break;
-
-
-            
         
+    }
+}
 
-        
+void Aventurier::boucledeJeu(Donjon& d){
+    char clavier;
+
+    while (estVivant() && d.getCase(x, y)->getTypeCase() != TypeCase::SORTIE){
+        d.afficher(x,y);
+        afficherStatut();
+
+        cout << "Pour vous déplacer, cliquez sur une touche : Z(haut), Q(gauche), S(bas), D(droite)"<<endl;
+        cin >> clavier;
+
+        int nx = x;
+        int ny = y;
+
+        switch (clavier){
+            case 'z':
+                nx--;
+                break;
+
+            case 'q':
+                ny--;
+                break;
+
+            case 's':
+                nx++;
+                break;
+
+            case 'd':
+                ny++;
+                break;
+
+            default:
+                break;
+        }
+
+        // vérification si la case cible est un mur
+        Case* cible = d.getCase(nx, ny);
+        if(cible == nullptr || cible->getTypeCase() == TypeCase::MUR){
+            cout << "Le déplacement est impossible." << endl;
+            continue;
+        }
+
+        deplacer(nx, ny);
+        resoudreCase(d, nx, ny);
+
+    }
+
+    if (!estVivant()){
+        cout<<"GAME OVER"<<endl;
+    }
+    else{
+        cout << "BRAVO VOUS ETES SORTI !!"<<endl;
     }
 }
