@@ -76,6 +76,33 @@ void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
             d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
             break ;
 
+        case TypeCase::MONSTRE :
+            char choix ;
+            std::cout << "Il Y a un monstre : saisir c = combattre ou f = fuir :" << endl ;
+            std::cin >> choix ;
+
+            if (choix == 'c') {
+                std::cout << "Combat =>  perte de x PV.\n";
+                pertePV(10) ;
+                d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
+            } 
+            else if (choix == 'f') {
+                std::cout << "Fuite prise.\n";
+            } 
+            else {
+                std::cout << "Choix invalide => perte de x PV.\n" ;
+                pertePV(15) ;
+                d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
+            }
+            break ;
+
+        case TypeCase::PIEGE :
+            std::cout << "Un piege se declenche, perds x PV.\n";
+            pertePV(10);
+            d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
+            break;
+
+
             
         
 
