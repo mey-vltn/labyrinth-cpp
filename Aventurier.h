@@ -18,6 +18,9 @@ class Aventurier {
         int nbTresors ;
     
     public:
+
+        Aventurier(int xInit = 1, int yInit = 1) ;
+        
         // getters
         int getX() const ;
         int getY() const ;
@@ -29,7 +32,7 @@ class Aventurier {
         void pertePV(int degats) ; 
         void ajouterTresor() ;
 
-        void resoudreCase(Case* c) ;
+        void resoudreCase(Donjon& d, int x, int y) ;
 
         bool estVivant() const ;
         void afficherStatut() const ;
