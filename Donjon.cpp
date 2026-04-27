@@ -2,6 +2,7 @@
 #include "CaseFactory.h"
 #include <random>
 #include <bits/stdc++.h>
+#include <queue>
 
 using namespace std;
 
@@ -101,6 +102,7 @@ void Donjon::generer(int l, int h) {
     int si = (hauteur - 2) % 2 == 0 ? hauteur - 3 : hauteur - 2;
     int sj = (largeur - 2) % 2 == 0 ? largeur - 3 : largeur - 2;
     grille[si][sj] = CaseFactory::creerCase(TypeCase::SORTIE);
+    sortie = {si, sj};
 
 
 }
@@ -138,3 +140,66 @@ void Donjon::remplacerCase(int x, int y, Case* newCase) {
     grille[x][y] = newCase ;
 }
 
+// BFS
+
+vector<pair<int,int>> Donjon::trouverChemin(vector<vector<Case*>> grille , pair<int,int> depart, pair<int,int> arrivee){
+    queue<pair<int,int>> file;
+    vector<vector<bool>> visite(hauteur, vector<bool>(largeur, false));
+    vector<vector<pair<int,int>>> parent(hauteur, vector<pair<int,int>>(largeur, {-1,-1}));
+
+    file.push(depart);
+    visite[depart.first][depart.second] = true;
+
+    // directions pour les voisins v
+    int dir_x[4] = {-1, 0, 1, 0};
+    int dir_y[4] = {0, 1, 0, -1};
+
+
+    while(!file.empty()){
+        pair<int,int> courant = file.front();
+        file.pop();
+
+        if(courant==arrivee) return reconstruireChemin(parent, depart, arrivee);
+
+        for(int i=0; i<4; i++){
+            int nx = courant.first + dir_x[i];
+            int ny = courant.second + dir_y[i];
+            pair<int,int> voisin = {nx, ny};
+
+            if(nx>=0 && nx<hauteur && ny>=0 && ny < largeur && !visite[nx][ny] && grille[nx][ny]->getTypeCase() != TypeCase::MUR){
+                visite[nx][ny] = true;
+                parent[nx][ny] = courant;
+                file.push(voisin);
+            }
+
+        }
+
+    }
+    return {};
+}
+
+vector<pair<int,int>> Donjon::reconstruireChemin(vector<vector<pair<int,int>>>& parent, pair<int,int> depart, pair<int,int> arrivee) {
+    
+    vector<pair<int,int>> chemin;
+    pair<int,int> courant = arrivee;
+
+    while (courant != depart) {
+        chemin.insert(chemin.begin(), courant); 
+        courant = parent[courant.first][courant.second];
+    }
+    chemin.insert(chemin.begin(), depart); 
+
+    return chemin;
+}
+
+int Donjon::getSortieX() const{
+    return sortie.first;
+}
+
+int Donjon::getSortieY() const{
+    return sortie.second;
+}
+
+vector<vector<Case*>> Donjon::getGrille() const{
+    return grille;
+}

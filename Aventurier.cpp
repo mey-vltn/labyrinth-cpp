@@ -111,6 +111,9 @@ void Aventurier::boucledeJeu(Donjon& d){
         d.afficher(x,y);
         afficherStatut();
 
+        auto chemin = d.trouverChemin(d.getGrille(), {x, y}, {d.getSortieX(), d.getSortieY()});
+        cout << "Distance à la sortie: " << chemin.size() - 1 << " cases\n";
+
         cout << "Pour vous déplacer, cliquez sur une touche : Z(haut), Q(gauche), S(bas), D(droite)"<<endl;
         cin >> clavier;
 
@@ -133,6 +136,17 @@ void Aventurier::boucledeJeu(Donjon& d){
             case 'd':
                 ny++;
                 break;
+
+            case 'p':{
+                auto chemin = d.trouverChemin(d.getGrille(), {x, y}, {d.getSortieX(), d.getSortieY()});
+                if (chemin.empty()) {
+                    cout << "Aucun chemin trouvé.\n";
+                } else {
+                    cout << "Chemin : ";
+                    for (auto& p : chemin)
+                        cout << "(" << p.first << "," << p.second << ") ";
+                }
+                break; }
 
             default:
                 break;
