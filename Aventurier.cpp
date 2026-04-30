@@ -101,6 +101,11 @@ void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
             d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
             break;
         
+        case TypeCase::SORTIE:
+            break ;
+
+        case TypeCase::ENTREE:
+            break ;
     }
 }
 

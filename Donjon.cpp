@@ -1,8 +1,10 @@
 #include "Donjon.h"
 #include "CaseFactory.h"
 #include <random>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <queue>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -52,6 +54,7 @@ bool Donjon::estDansBornes(int x, int y) const {
 
 // FONCTIONS DE GÉNÉRATION DE LABYRINTHE
 
+/*
 void Donjon::genererLabyrinthe(int x, int y){
     grille[x][y] = CaseFactory::creerCase(TypeCase::PASSAGE);
 
@@ -75,6 +78,39 @@ void Donjon::genererLabyrinthe(int x, int y){
         }
      }
 }
+*/
+
+
+void Donjon::genererLabyrinthe(int x, int y){
+    grille[x][y] = CaseFactory::creerCase(TypeCase::PASSAGE);
+
+    int ordre[4] = {0, 1, 2, 3}; // on crée ça pour représenter les indices du tableau DIRECTIONS
+
+    // Initialisation du générateur aléatoire
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    // Mélange moderne avec std::shuffle
+    std::shuffle(ordre, ordre + 4, g);
+
+    for(int i=0; i<4; i++) {
+        int dx = DIRECTIONS[ordre[i]][0];
+        int dy = DIRECTIONS[ordre[i]][1];
+        int mur_x = dx/2;
+        int mur_y = dy/2;
+
+        int nx = x + dx;
+        int ny = y + dy;
+
+        // vérification des bornes
+        if (nx > 0 && nx < hauteur - 1 && ny > 0 && ny < largeur - 1 && grille[nx][ny]->getTypeCase() == TypeCase::MUR) {
+            grille[x + mur_x][y + mur_y] = CaseFactory::creerCase(TypeCase::PASSAGE);
+
+            genererLabyrinthe(nx, ny);
+        }
+    }
+}
+
 
 
 
