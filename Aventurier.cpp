@@ -171,3 +171,5 @@ void Aventurier::boucledeJeu(Donjon& d){
         cout << "BRAVO VOUS ETES SORTI !!"<<endl;
     }
 }
+
+
