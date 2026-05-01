@@ -8,6 +8,12 @@
 
 using namespace std;
 
+const int DIRECTIONS[4][2] = {
+    {-2, 0},
+    {2, 0},
+    {0, -2},
+    {0, 2}
+};
 
 void Donjon::afficher(int ax, int ay) {
     
@@ -37,12 +43,7 @@ void Donjon::afficher(int ax, int ay) {
     cout << "+" << endl;
 }
 
-const int DIRECTIONS[4][2] = {
-    {-2, 0},
-    {2, 0},
-    {0, -2},
-    {0, 2}
-};
+
 
 
 bool Donjon::estDansBornes(int x, int y) const {
@@ -50,35 +51,6 @@ bool Donjon::estDansBornes(int x, int y) const {
     return (y >= 0 && y < grille.size()) && (x >= 0 && x < grille[y].size()) ;
 }
 
-
-
-// FONCTIONS DE GÉNÉRATION DE LABYRINTHE
-
-/*
-void Donjon::genererLabyrinthe(int x, int y){
-    grille[x][y] = CaseFactory::creerCase(TypeCase::PASSAGE);
-
-    int ordre[4] = {0, 1, 2, 3}; // on crée ça pour représenter les indices du tableau DIRECTIONS, c'est ce qu'on va shuffle
-    random_shuffle(ordre, ordre+4);
-
-    for(int i=0; i<4; i++) {
-        int dx = DIRECTIONS[ordre[i]][0];
-        int dy = DIRECTIONS[ordre[i]][1];
-        int mur_x = dx/2;
-        int mur_y = dy/2;
-
-        int nx = x + dx;
-        int ny = y + dy;
-
-        // vérification des bornes
-        if (nx > 0 && nx < hauteur - 1 && ny > 0 && ny < largeur - 1 && grille[nx][ny]->getTypeCase() == TypeCase::MUR) {
-            grille[x + mur_x][y + mur_y] = CaseFactory::creerCase(TypeCase::PASSAGE);
-
-            genererLabyrinthe(nx, ny);
-        }
-     }
-}
-*/
 
 
 void Donjon::genererLabyrinthe(int x, int y){
@@ -238,4 +210,56 @@ int Donjon::getSortieY() const{
 
 vector<vector<Case*>> Donjon::getGrille() const{
     return grille;
+}
+
+
+void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay) {
+    if (chemin.empty()) {
+        cout << "Aucun chemin trouvé.\n";
+        return;
+    }
+
+    vector<vector<char>> copie(hauteur, vector<char>(largeur));
+
+    // Copier l'affichage actuel de la grille
+    for (int i = 0; i < hauteur; i++) {
+        for (int j = 0; j < largeur; j++) {
+            copie[i][j] = grille[i][j]->afficher();
+        }
+    }
+
+    // Marquer le chemin avec '.'
+    for (auto& pos : chemin) {
+        int x = pos.first;
+        int y = pos.second;
+
+        // éviter de remplacer l'entrée, la sortie et le joueur
+        if (!(x == ax && y == ay) &&
+            grille[x][y]->getTypeCase() != TypeCase::ENTREE &&
+            grille[x][y]->getTypeCase() != TypeCase::SORTIE) {
+            copie[x][y] = '.';
+        }
+    }
+
+    // Afficher la copie
+    cout << '+';
+    for (int j = 0; j < largeur; j++) cout << " -";
+    cout << "+" << endl;
+
+    for (int i = 0; i < hauteur; i++) {
+        cout << '|';
+        for (int j = 0; j < largeur; j++) {
+            if (i == ax && j == ay)
+                cout << "@ ";
+            else
+                cout << copie[i][j] << " ";
+        }
+        cout << '|' << endl;
+    }
+
+    cout << '+';
+    for (int j = 0; j < largeur; j++) cout << " -";
+    cout << "+" << endl;
+
+    cout << "Distance a la sortie : " << chemin.size() - 1 << " cases" << endl;
 }

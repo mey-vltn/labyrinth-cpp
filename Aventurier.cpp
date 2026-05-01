@@ -52,7 +52,7 @@ bool Aventurier::estVivant () const {
 
 void Aventurier::afficherStatut() const {
     std::cout << "Position : (" << x << ", " << y << ")\n";
-    std::cout << "Sante : " << ptsVie << "\n";
+    std::cout << "Points de vie : " << ptsVie << "/100\n";
     std::cout << "Inventaire : " << nbTresors << " tresor(s)\n";
 }
 
@@ -79,6 +79,9 @@ void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
             char choix ;
             std::cout << "Il Y a un monstre : saisir c = combattre ou f = fuir :" << endl ;
             std::cin >> choix ;
+
+            // randomiser le nombre de ptsVie perdus?
+            // que faire en cas de fuite?
 
             if (choix == 'c') {
                 std::cout << "Combat =>  perte de x PV.\n";
@@ -142,17 +145,18 @@ void Aventurier::boucledeJeu(Donjon& d){
                 ny++;
                 break;
 
-            case 'p':{
-                auto chemin = d.trouverChemin(d.getGrille(), {x, y}, {d.getSortieX(), d.getSortieY()});
-                if (chemin.empty()) {
-                    cout << "Aucun chemin trouvé.\n";
-                } else {
-                    cout << "Chemin : ";
-                    for (auto& p : chemin)
-                        cout << "(" << p.first << "," << p.second << ") ";
-                }
-                break; }
-
+            case 'p': {
+                auto chemin = d.trouverChemin(
+                    d.getGrille(),
+                    {x, y},
+                    {d.getSortieX(), d.getSortieY()}
+                );
+            
+                d.afficherChemin(chemin, x, y);
+            
+                break ;
+            }
+            
             default:
                 break;
         }

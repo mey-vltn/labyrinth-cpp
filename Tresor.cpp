@@ -6,7 +6,7 @@ using namespace std;
 Tresor::Tresor (int valeur) : valeur(valeur) {}
 
 char Tresor::afficher () const {
-    char c = 'T' ;
+    char c = '+' ;
     return c ;
 }
 
