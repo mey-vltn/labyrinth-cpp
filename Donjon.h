@@ -16,6 +16,11 @@ class Donjon {
         int largeur ;
         pair<int, int> sortie;
 
+        std::vector<std::vector<bool>> visites;
+        int nbCasesVisitees = 0;
+
+        
+
 
     public :
     
@@ -36,6 +41,16 @@ class Donjon {
         vector<vector<Case*>> getGrille() const ;
 
         void afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay) ;
+
+        // gestion des visites des cases
+        void marquerVisitee(int x, int y);
+        int getNbCasesVisitees() const;
+
+        // bonus sauvegarde dans fichier 
+        void sauvegarder(const std::string& nomFichier) const;
+        void charger(const std::string& nomFichier);
+
+        void deplacerMonstreAleatoirement(int ancienX, int ancienY);
 };
 
 

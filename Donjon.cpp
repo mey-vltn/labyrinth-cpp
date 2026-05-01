@@ -4,6 +4,8 @@
 //#include <bits/stdc++.h>
 #include <queue>
 #include <algorithm>
+#include <fstream>
+#include <string>
 
 
 using namespace std;
@@ -16,7 +18,7 @@ const int DIRECTIONS[4][2] = {
 };
 
 void Donjon::afficher(int ax, int ay) {
-    
+    cout << '\n';
     // contour du haut
     cout << '+';
     for (int j = 0; j < largeur; j++) cout << " -";
@@ -95,6 +97,9 @@ void Donjon::generer(int l, int h) {
     // initialisation de toute la grille avec des murs
     grille = vector<vector<Case*>>(hauteur, vector<Case*>(largeur, nullptr));
 
+    visites = vector<vector<bool>>(hauteur, vector<bool>(largeur, false));
+    nbCasesVisitees = 0;
+
     for(int i = 0; i < hauteur; i++){
         for(int j = 0; j < largeur; j++){
             grille[i][j] = CaseFactory::creerCase(TypeCase::MUR);
@@ -118,8 +123,7 @@ void Donjon::generer(int l, int h) {
 
 void Donjon::placerElements() {
     std::mt19937 rng{std::random_device{}()};
-    std::uniform_int_distribution<int> dist(0, 100); // c'est des générateurs de probabilités mais j'avoue que je les comprends pas trop
-
+    std::uniform_int_distribution<int> dist(0, 100); 
     for (int i = 0; i < hauteur; i++) {
         for (int j = 0; j < largeur; j++) {
 
@@ -262,4 +266,87 @@ void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay)
     cout << "+" << endl;
 
     cout << "Distance a la sortie : " << chemin.size() - 1 << " cases" << endl;
+}
+
+
+
+void Donjon::marquerVisitee(int x, int y) {
+    if (!visites[x][y]) {
+        visites[x][y] = true;
+        nbCasesVisitees++;
+    }
+}
+
+int Donjon::getNbCasesVisitees() const {
+    return nbCasesVisitees;
+}
+
+
+void Donjon::sauvegarder(const std::string& nomFichier) const {
+    std::ofstream fichier(nomFichier);
+
+    fichier << largeur << " " << hauteur << "\n";
+
+    for (int i = 0; i < hauteur; i++) {
+        for (int j = 0; j < largeur; j++) {
+            fichier << grille[i][j]->afficher();
+        }
+        fichier << "\n";
+    }
+}
+
+void Donjon::charger(const std::string& nomFichier) {
+    std::ifstream fichier(nomFichier);
+
+    fichier >> largeur >> hauteur;
+    fichier.ignore();
+
+    grille = std::vector<std::vector<Case*>>(
+        hauteur,
+        std::vector<Case*>(largeur, nullptr)
+    );
+
+    std::string ligne;
+
+    for (int i = 0; i < hauteur; i++) {
+        std::getline(fichier, ligne);
+
+        for (int j = 0; j < largeur; j++) {
+            char c = ligne[j];
+
+            if (c == '#') grille[i][j] = CaseFactory::creerCase(TypeCase::MUR);
+            else if (c == '+') grille[i][j] = CaseFactory::creerCase(TypeCase::TRESOR);
+            else if (c == 'M') grille[i][j] = CaseFactory::creerCase(TypeCase::MONSTRE);
+            else if (c == 'P') grille[i][j] = CaseFactory::creerCase(TypeCase::PIEGE);
+            else if (c == 'E') grille[i][j] = CaseFactory::creerCase(TypeCase::ENTREE);
+            else if (c == 'S') {
+                grille[i][j] = CaseFactory::creerCase(TypeCase::SORTIE);
+                sortie = {i, j};
+            }
+            else grille[i][j] = CaseFactory::creerCase(TypeCase::PASSAGE);
+        }
+    }
+}
+
+
+
+void Donjon::deplacerMonstreAleatoirement(int ancienX, int ancienY) {
+    std::vector<std::pair<int, int>> casesLibres;
+
+    for (int i = 0; i < hauteur; i++) {
+        for (int j = 0; j < largeur; j++) {
+            if (grille[i][j]->getTypeCase() == TypeCase::PASSAGE) {
+                casesLibres.push_back({i, j});
+            }
+        }
+    }
+
+    if (casesLibres.empty()) return;
+
+    int indice = rand() % casesLibres.size();
+    int nouveauX = casesLibres[indice].first;
+    int nouveauY = casesLibres[indice].second;
+
+    remplacerCase(ancienX, ancienY, CaseFactory::creerCase(TypeCase::PASSAGE));
+    remplacerCase(nouveauX, nouveauY, CaseFactory::creerCase(TypeCase::MONSTRE));
 }

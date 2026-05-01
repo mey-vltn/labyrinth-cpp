@@ -30,9 +30,10 @@ class Aventurier {
         
         void deplacer(int nx, int ny) ;
         void pertePV(int degats) ; 
+        void gagnerPV(int soin);
         void ajouterTresor() ;
 
-        void resoudreCase(Donjon& d, int x, int y) ;
+        bool resoudreCase(Donjon& d, int x, int y) ;
 
         bool estVivant() const ;
         void afficherStatut() const ;

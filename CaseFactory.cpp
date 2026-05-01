@@ -37,6 +37,6 @@ Case* CaseFactory::creerCase(TypeCase type) {
             return new Sortie();
         
         default :
-            throw std::invalid_argument("TypeCase invalide");;
+            throw std::invalid_argument("TypeCase invalide");
     }
 };

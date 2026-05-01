@@ -32,6 +32,7 @@ int Aventurier::getNbTresors() const {
 
 
 
+
 void Aventurier::deplacer(int nx, int ny) {
     x = nx ;
     y = ny ;
@@ -40,6 +41,10 @@ void Aventurier::deplacer(int nx, int ny) {
 void Aventurier::pertePV(int degats) {
     ptsVie -= degats ;
     if (ptsVie < 0) ptsVie = 0 ;
+}
+
+void Aventurier::gagnerPV(int soin) {
+    ptsVie += soin ;
 }
 
 void Aventurier::ajouterTresor() {
@@ -53,27 +58,34 @@ bool Aventurier::estVivant () const {
 void Aventurier::afficherStatut() const {
     std::cout << "Position : (" << x << ", " << y << ")\n";
     std::cout << "Points de vie : " << ptsVie << "/100\n";
-    std::cout << "Inventaire : " << nbTresors << " tresor(s)\n";
+    std::cout << "Inventaire : " << nbTresors << " tresor(s) coffrés\n\n";
 }
 
 
-void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
+bool Aventurier::resoudreCase (Donjon& d, int x, int y)  {
 
     Case* c = d.getCase(x,y) ;
 
     switch (c->getTypeCase()) {
 
         case TypeCase::MUR:
-            break ;
+            return false ;
 
         case TypeCase::PASSAGE :
-            break ;
+            return true ;
 
-        case TypeCase::TRESOR :
+        case TypeCase::TRESOR : {
             std::cout << "VOUS AVEZ TROUVÉ UN TRÉSOR" << endl ;
             ajouterTresor() ;
+
+            int soin = 5 + rand() % 6 ; // entre 5 et 10
+            gagnerPV(soin) ;
+
+            std::cout << "Le tresor vous soigne de " << soin << " PV.\n" ;
+
             d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
-            break ;
+            return true ;
+        }
 
         case TypeCase::MONSTRE :
             char choix ;
@@ -84,45 +96,58 @@ void Aventurier::resoudreCase (Donjon& d, int x, int y)  {
             // que faire en cas de fuite?
 
             if (choix == 'c') {
-                std::cout << "Combat =>  perte de x PV.\n";
+                std::cout << "Combat =>  perte de 10 PV.\n";
                 pertePV(10) ;
                 d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
+                return true ;
             } 
             else if (choix == 'f') {
-                std::cout << "Fuite prise.\n";
-            } 
+                std::cout << "Fuite prise : le monstre rôde ailleurs dans le donjon...\n";
+                d.deplacerMonstreAleatoirement(x, y);
+                return false;
+            }
             else {
-                std::cout << "Choix invalide => perte de x PV.\n" ;
+                std::cout << "Choix invalide => perte de 15 PV.\n" ;
                 pertePV(15) ;
                 d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
+                return false ;
             }
-            break ;
 
-        case TypeCase::PIEGE :
-            std::cout << "Un piege se declenche, perds x PV.\n";
-            pertePV(10);
+
+        case TypeCase::PIEGE :{
+            int degats = 5 + rand() % 16 ; // entre 5 et 20
+            std::cout << "Un piege se declenche, perte de " << degats << " PV.\n";
+            pertePV(degats);
             d.remplacerCase(x, y, CaseFactory::creerCase(TypeCase::PASSAGE)) ;
-            break;
+            return true ;
+        }
         
         case TypeCase::SORTIE:
-            break ;
+            return true ;
 
         case TypeCase::ENTREE:
-            break ;
+            return true ;
     }
+    return false ;
 }
 
 void Aventurier::boucledeJeu(Donjon& d){
     char clavier;
+    d.marquerVisitee(x, y);
 
     while (estVivant() && d.getCase(x, y)->getTypeCase() != TypeCase::SORTIE){
+        
         d.afficher(x,y);
+
+        cout << "ZQSD pour bouger | I = sauvegarder | M = charger\n\n";
+        
         afficherStatut();
 
-        auto chemin = d.trouverChemin(d.getGrille(), {x, y}, {d.getSortieX(), d.getSortieY()});
-        cout << "Distance à la sortie: " << chemin.size() - 1 << " cases\n";
+        cout << "Nombre de cases visitées : " << d.getNbCasesVisitees() << endl << endl;
 
-        cout << "Pour vous déplacer, cliquez sur une touche : Z(haut), Q(gauche), S(bas), D(droite)"<<endl;
+        auto chemin = d.trouverChemin(d.getGrille(), {x, y}, {d.getSortieX(), d.getSortieY()});
+        cout << "Distance à la sortie: " << chemin.size() - 1 << " cases\n\n";
+
         cin >> clavier;
 
         int nx = x;
@@ -156,6 +181,15 @@ void Aventurier::boucledeJeu(Donjon& d){
             
                 break ;
             }
+            case 'i':  // sauvegarde
+                d.sauvegarder("donjon.txt");
+                cout << "Donjon sauvegardé.\n";
+                break;
+
+            case 'm':  // chargement
+                d.charger("donjon.txt");
+                cout << "Donjon chargé.\n";
+                break;
             
             default:
                 break;
@@ -168,8 +202,11 @@ void Aventurier::boucledeJeu(Donjon& d){
             continue;
         }
 
-        deplacer(nx, ny);
-        resoudreCase(d, nx, ny);
+        bool peutAvancer = resoudreCase(d, nx, ny) ;
+        if (peutAvancer) {
+            deplacer(nx, ny);
+            d.marquerVisitee(nx, ny);
+        }
 
     }
 
