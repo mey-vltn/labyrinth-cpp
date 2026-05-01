@@ -21,20 +21,19 @@ class Aventurier {
 
         Aventurier(int xInit = 1, int yInit = 1) ;
         
-        // getters
+        // GETTERS
         int getX() const ;
         int getY() const ;
         int getPV() const ;
         int getNbTresors() const ;
 
-        
-        void deplacer(int nx, int ny) ;
+        // GESTION PV + TRÉSOR
         void pertePV(int degats) ; 
         void gagnerPV(int soin);
         void ajouterTresor() ;
 
+        void deplacer(int nx, int ny) ;
         bool resoudreCase(Donjon& d, int x, int y) ;
-
         bool estVivant() const ;
         void afficherStatut() const ;
 

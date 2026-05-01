@@ -19,22 +19,22 @@ Case* CaseFactory::creerCase(TypeCase type) {
             return new Mur();
         
         case TypeCase::PASSAGE :
-            return new Passage();
+            return new Passage() ;
         
         case TypeCase::TRESOR :
-            return new Tresor(10);
+            return new Tresor(10) ;
         
         case TypeCase::MONSTRE :
-            return new Monstre(10);
+            return new Monstre(10) ;
         
         case TypeCase::PIEGE :
-            return new Piege(10);  
+            return new Piege(10) ;  
         
         case TypeCase::ENTREE:
-            return new Entree();
+            return new Entree() ;
 
         case TypeCase::SORTIE:
-            return new Sortie();
+            return new Sortie() ;
         
         default :
             throw std::invalid_argument("TypeCase invalide");

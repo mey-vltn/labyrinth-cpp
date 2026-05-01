@@ -6,8 +6,7 @@
 
 
 // CONSTRUCTEUR
-Aventurier::Aventurier (int xInit, int yInit) 
-    : x(xInit), y(yInit), ptsVie(100), nbTresors(0) {}
+Aventurier::Aventurier (int xInit, int yInit) : x(xInit), y(yInit), ptsVie(100), nbTresors(0) {}
 
 
 
@@ -31,12 +30,7 @@ int Aventurier::getNbTresors() const {
 
 
 
-
-
-void Aventurier::deplacer(int nx, int ny) {
-    x = nx ;
-    y = ny ;
-}
+// GESTION PV + TRÉSOR
 
 void Aventurier::pertePV(int degats) {
     ptsVie -= degats ;
@@ -51,15 +45,29 @@ void Aventurier::ajouterTresor() {
     nbTresors++ ;
 } 
 
+
+
+
+
+void Aventurier::deplacer(int nx, int ny) {
+    x = nx ;
+    y = ny ;
+}
+
+
+
 bool Aventurier::estVivant () const {
     return ptsVie > 0 ;
 }
+
+
 
 void Aventurier::afficherStatut() const {
     std::cout << "Position : (" << x << ", " << y << ")\n";
     std::cout << "Points de vie : " << ptsVie << "/100\n";
     std::cout << "Inventaire : " << nbTresors << " tresor(s) coffrés\n\n";
 }
+
 
 
 bool Aventurier::resoudreCase (Donjon& d, int x, int y)  {
@@ -113,7 +121,6 @@ bool Aventurier::resoudreCase (Donjon& d, int x, int y)  {
                 return false ;
             }
 
-
         case TypeCase::PIEGE :{
             int degats = 5 + rand() % 16 ; // entre 5 et 20
             std::cout << "Un piege se declenche, perte de " << degats << " PV.\n";
@@ -130,6 +137,8 @@ bool Aventurier::resoudreCase (Donjon& d, int x, int y)  {
     }
     return false ;
 }
+
+
 
 void Aventurier::boucledeJeu(Donjon& d){
     char clavier;
