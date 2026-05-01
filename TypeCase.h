@@ -9,6 +9,6 @@ enum class TypeCase {
     PIEGE,
     ENTREE,
     SORTIE
-} ;
+};
 
 #endif

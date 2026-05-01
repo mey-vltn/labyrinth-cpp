@@ -5,8 +5,8 @@
 
 class Mur : public Case {
     public :
-    char afficher() const override ;
-    TypeCase getTypeCase() const override ;
+        char afficher() const override ;
+        TypeCase getTypeCase() const override ;
 };
 
 #endif

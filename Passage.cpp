@@ -11,7 +11,7 @@ TypeCase Passage::getTypeCase() const {
     return TypeCase::PASSAGE ;
 }
 
-ostream& operator<<(ostream& os, const Passage& e){
-    os << e.afficher();
-    return os;
+ostream& operator<<(ostream& os, const Passage& e) {
+    os << e.afficher() ;
+    return os ;
 }

@@ -11,7 +11,7 @@ TypeCase Mur::getTypeCase() const {
     return TypeCase::MUR ;
 }
 
-ostream& operator<<(ostream& os, const Mur& e){
-    os << e.afficher();
-    return os;
+ostream& operator<<(ostream& os, const Mur& e ){
+    os << e.afficher() ;
+    return os ;
 }

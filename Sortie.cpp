@@ -12,7 +12,7 @@ TypeCase Sortie::getTypeCase() const {
     return TypeCase::SORTIE ;
 }
 
-ostream& operator<<(ostream& os, const Sortie& e){
-    os << e.afficher();
-    return os;
+ostream& operator<<(ostream& os, const Sortie& e) {
+    os << e.afficher() ;
+    return os ;
 }

@@ -6,7 +6,7 @@
 
 #include "Case.h" 
 
-using namespace std ;  
+using namespace std;  
 
 class Donjon {
     
@@ -14,43 +14,43 @@ class Donjon {
         vector<vector<Case*>> grille ;
         int hauteur ;
         int largeur ;
-        pair<int, int> sortie;
+        pair<int, int> sortie ;
 
-        std::vector<std::vector<bool>> visites;
-        int nbCasesVisitees = 0;
+        std::vector<std::vector<bool>> visites ;
+        int nbCasesVisitees = 0 ;
 
         
-
-
     public :
-    
+
+        // GETTERS
         Case* getCase (int x, int y) const ;
-
-        void generer (int largeur, int hauteur) ;
-        void genererLabyrinthe(int x, int y) ;
-        void placerElements();
-        void afficher (int ax, int ay) ;
-        vector<pair<int,int>> trouverChemin (vector<vector<Case*>> grille , pair<int,int> depart, pair<int,int> arrivee) ;
-        vector<pair<int,int>> reconstruireChemin(vector<vector<pair<int,int>>>& parent, pair<int,int> depart, pair<int,int> arrivee) ;
-
-        void remplacerCase(int x, int y, Case* newCase) ;
-        bool estDansBornes (int x, int y) const ;
-        //bool estFranchissable (int x, int y) const ;
         int getSortieX() const ;
         int getSortieY() const ;
         vector<vector<Case*>> getGrille() const ;
 
+        // AFFICHAGE
+        void afficher (int ax, int ay) ;
         void afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay) ;
 
-        // gestion des visites des cases
-        void marquerVisitee(int x, int y);
-        int getNbCasesVisitees() const;
+        // GESTION DE LA GRILLE
+        void generer (int largeur, int hauteur) ;
+        void genererLabyrinthe(int x, int y) ;
+        void placerElements() ;
+        vector<pair<int,int>> trouverChemin (vector<vector<Case*>> grille , pair<int,int> depart, pair<int,int> arrivee) ;
+        vector<pair<int,int>> reconstruireChemin(vector<vector<pair<int,int>>>& parent, pair<int,int> depart, pair<int,int> arrivee) ;
+        void remplacerCase(int x, int y, Case* newCase) ;
+        bool estDansBornes (int x, int y) const ;
+        
+        // GESTION DE LA VISITE DES CASES
+        void marquerVisitee(int x, int y) ;
+        int getNbCasesVisitees() const ;
 
-        // bonus sauvegarde dans fichier 
-        void sauvegarder(const std::string& nomFichier) const;
-        void charger(const std::string& nomFichier);
+        // GETSIONDE LA SAUVEGARDE DANS FICHIER TEXTE
+        void sauvegarder(const std::string& nomFichier) const ;
+        void charger(const std::string& nomFichier) ;
 
-        void deplacerMonstreAleatoirement(int ancienX, int ancienY);
+        // GESTION DEPLACEMENT ALÉATOIREE DES MONSTRES
+        void deplacerMonstreAleatoirement(int ancienX, int ancienY) ;
 };
 
 

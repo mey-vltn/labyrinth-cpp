@@ -3,11 +3,11 @@
 
 int main() {
     Donjon donjon;
-    Aventurier aventurier(1, 1);
+    Aventurier aventurier(1, 1) ;
 
-    donjon.generer(21, 21);
+    donjon.generer(21, 21) ;
 
-    aventurier.boucledeJeu(donjon);
+    aventurier.boucledeJeu(donjon) ;
 
-    return 0;
+    return 0 ;
 }

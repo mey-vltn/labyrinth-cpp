@@ -139,7 +139,7 @@ void Aventurier::boucledeJeu(Donjon& d){
         
         d.afficher(x,y);
 
-        cout << "ZQSD pour bouger | I = sauvegarder | M = charger\n\n";
+        cout << "ZQSD pour bouger | C pour afficher le chemin optimal | I = sauvegarder | M = charger\n\n";
         
         afficherStatut();
 

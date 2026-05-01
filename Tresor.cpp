@@ -1,7 +1,7 @@
 #include "Tresor.h"
 #include <iostream>
 
-using namespace std;
+using namespace std ;
 
 Tresor::Tresor (int valeur) : valeur(valeur) {}
 
@@ -15,6 +15,6 @@ TypeCase Tresor::getTypeCase() const {
 }
 
 ostream& operator<<(ostream& os, const Tresor& e){
-    os << e.afficher();
-    return os;
+    os << e.afficher() ;
+    return os ;
 }

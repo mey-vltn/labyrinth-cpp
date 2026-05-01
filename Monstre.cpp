@@ -13,7 +13,7 @@ TypeCase Monstre::getTypeCase() const {
     return TypeCase::MONSTRE ;
 }
 
-ostream& operator<<(ostream& os, const Monstre& e){
-    os << e.afficher();
-    return os;
+ostream& operator<<(ostream& os, const Monstre& e) {
+    os << e.afficher() ;
+    return os ;
 }
