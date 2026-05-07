@@ -13,9 +13,14 @@ using namespace std;
 class Aventurier {
 
     private:
+
+        // ATTRIBUTS
         int x, y ;
         int ptsVie ;
         int nbTresors ;
+
+        // GESTION COMBAT MONSTRE
+        bool combatPFC() ;
     
     public:
 
@@ -37,6 +42,7 @@ class Aventurier {
         bool estVivant() const ;
         void afficherStatut() const ;
 
+        // BOUCLE PRINCIPALE DE JEU
         void boucledeJeu(Donjon& d);
     
 };

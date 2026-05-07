@@ -6,10 +6,19 @@
 #include <fstream>
 #include <string>
 
-
 using namespace std;
 
+// définitions des couleurs pour l'affichage dans le terminal
+#define RESET   "\033[0m"
+#define ROUGE   "\033[31m"
+#define VERT    "\033[32m"
+#define JAUNE   "\033[33m"
+#define BLEU    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define BOLD    "\033[1m"
 
+// tableau des différentes directions pour le parcours de la grille (2 par 2).
 const int DIRECTIONS[4][2] = {
     {-2, 0},
     {2, 0},
@@ -41,37 +50,53 @@ vector<vector<Case*>> Donjon::getGrille() const{
 
 // AFFICHAGES
 
+// fonction d'affichage du donjon
 void Donjon::afficher(int ax, int ay) {
+
     cout << '\n';
-    // contour du haut
     cout << '+';
     for (int j = 0; j < largeur; j++) cout << " -";
     cout << "+" << endl;
 
-    // contenu
     for (int i = 0; i < hauteur; i++) {
-        cout << '|'; // bord de gauche
+        cout << '|';
         for (int j = 0; j < largeur; j++) {
             if (i == ax && j == ay) {
-                cout << "@ ";}
-            else{
+                cout << BOLD << VERT << "@" << RESET << " ";
+            } else {
                 Case* c = grille[i][j];
-                if (c != nullptr) cout << c->afficher() << " ";
+                if (c != nullptr) {
+                    switch (c->getTypeCase()) {
+                        case TypeCase::MUR:
+                            cout << BLEU << c->afficher() << RESET << " "; break;
+                        case TypeCase::TRESOR:
+                            cout << JAUNE << c->afficher() << RESET << " "; break;
+                        case TypeCase::MONSTRE:
+                            cout << ROUGE << c->afficher() << RESET << " "; break;
+                        case TypeCase::PIEGE:
+                            cout << MAGENTA << c->afficher() << RESET << " "; break;
+                        case TypeCase::ENTREE:
+                            cout << BOLD << CYAN << c->afficher() << RESET << " "; break;
+                        case TypeCase::SORTIE:
+                            cout << BOLD << VERT << c->afficher() << RESET << " "; break;
+                        default:
+                            cout << c->afficher() << " "; break;
+                    }
+                }
             }
-            
         }
-        cout << '|' << endl; // bord droit + retour à la ligne
+        cout << '|' << endl;
     }
 
-    // contour du bas
     cout << '+';
     for (int j = 0; j < largeur; j++) cout << " -";
     cout << "+" << endl;
 }
 
 
+// fonction d'affichage du chemin optimal trouvé grâce au BFS
 void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay) {
-    
+
     if (chemin.empty()) {
         cout << "Aucun chemin trouvé.\n";
         return;
@@ -79,19 +104,16 @@ void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay)
 
     vector<vector<char>> copie(hauteur, vector<char>(largeur));
 
-    // copie de l'affichage actuel de la grille
     for (int i = 0; i < hauteur; i++) {
         for (int j = 0; j < largeur; j++) {
             copie[i][j] = grille[i][j]->afficher();
         }
     }
 
-    // marquage du chemin avec '.'
     for (auto& pos : chemin) {
         int x = pos.first;
         int y = pos.second;
 
-        // éviter de remplacer l'entrée, la sortie et le joueur
         if (!(x == ax && y == ay) &&
             grille[x][y]->getTypeCase() != TypeCase::ENTREE &&
             grille[x][y]->getTypeCase() != TypeCase::SORTIE) {
@@ -99,7 +121,6 @@ void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay)
         }
     }
 
-    // Afficher la copie
     cout << '+';
     for (int j = 0; j < largeur; j++) cout << " -";
     cout << "+" << endl;
@@ -108,7 +129,9 @@ void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay)
         cout << '|';
         for (int j = 0; j < largeur; j++) {
             if (i == ax && j == ay)
-                cout << "@ ";
+                cout << VERT << "@" << RESET << " ";
+            else if (copie[i][j] == '.')
+                cout << JAUNE << "." << RESET << " ";
             else
                 cout << copie[i][j] << " ";
         }
@@ -123,16 +146,14 @@ void Donjon::afficherChemin(const vector<pair<int,int>>& chemin, int ax, int ay)
 }
 
 
-
-
-
 // GESTION DE LA GRILLE
 
-
+// vérifie que les coordonnées sont dans les bornes
 bool Donjon::estDansBornes(int x, int y) const {
     return (y >= 0 && y < grille.size()) && (x >= 0 && x < grille[y].size()) ;
 }
 
+// fonction récursive de génération de labyrinthe
 void Donjon::genererLabyrinthe(int x, int y){
     grille[x][y] = CaseFactory::creerCase(TypeCase::PASSAGE);
 
@@ -155,7 +176,7 @@ void Donjon::genererLabyrinthe(int x, int y){
         int ny = y + dy;
 
         // vérification des bornes
-        if (nx > 0 && nx < hauteur - 1 && ny > 0 && ny < largeur - 1 && grille[nx][ny]->getTypeCase() == TypeCase::MUR) {
+        if (nx >= 0 && nx < hauteur  && ny >= 0 && ny < largeur  && grille[nx][ny]->getTypeCase() == TypeCase::MUR) {
             grille[x + mur_x][y + mur_y] = CaseFactory::creerCase(TypeCase::PASSAGE);
 
             genererLabyrinthe(nx, ny);
@@ -163,10 +184,8 @@ void Donjon::genererLabyrinthe(int x, int y){
     }
 }
 
-
+// génération de labyrinthe
 void Donjon::generer(int l, int h) {
-    largeur = l ;
-    hauteur = h ;
     largeur = l ;
     hauteur = h ;
 
@@ -182,21 +201,21 @@ void Donjon::generer(int l, int h) {
         }
     }
 
-    genererLabyrinthe(1, 1);
+    genererLabyrinthe(0, 0);
 
     placerElements();
 
-    grille[1][1] = CaseFactory::creerCase(TypeCase::ENTREE);
+    grille[0][0] = CaseFactory::creerCase(TypeCase::ENTREE);
     // ici on veut toujours que la sortie soit accessible : il faut que ce soit sur une case impair parce qu'on commence sur (1,1) et on saute de 2 en 2.
-    int si = (hauteur - 2) % 2 == 0 ? hauteur - 3 : hauteur - 2;
-    int sj = (largeur - 2) % 2 == 0 ? largeur - 3 : largeur - 2;
+    int si = (hauteur % 2 == 0) ? hauteur - 2 : hauteur - 3;
+    int sj = (largeur % 2 == 0) ? largeur - 2 : largeur - 3;
     grille[si][sj] = CaseFactory::creerCase(TypeCase::SORTIE);
     sortie = {si, sj};
 
 
 }
 
-
+// fonction qui place les différents éléments sur la grille de façon aléatoire
 void Donjon::placerElements() {
     std::mt19937 rng{std::random_device{}()}; // générateur de nombres aléatoires
     std::uniform_int_distribution<int> dist(0, 100);  // Distribution uniforme d'entiers entre 0 et 100
@@ -216,13 +235,15 @@ void Donjon::placerElements() {
     }
 }
 
-
+// permet de remplacer une case par une nouvelle case
 void Donjon::remplacerCase(int x, int y, Case* newCase) {
     delete grille[x][y] ;
     grille[x][y] = newCase ;
 }
 
 // BFS
+
+// fonction pour trouver le chemin optimal
 vector<pair<int,int>> Donjon::trouverChemin(vector<vector<Case*>> grille , pair<int,int> depart, pair<int,int> arrivee){
 
     queue<pair<int,int>> file;
@@ -258,6 +279,7 @@ vector<pair<int,int>> Donjon::trouverChemin(vector<vector<Case*>> grille , pair<
     return {} ;
 }
 
+// fonction pour reconstruire le chemin optimal
 vector<pair<int,int>> Donjon::reconstruireChemin(vector<vector<pair<int,int>>>& parent, pair<int,int> depart, pair<int,int> arrivee) {
     
     vector<pair<int,int>> chemin;
@@ -276,6 +298,7 @@ vector<pair<int,int>> Donjon::reconstruireChemin(vector<vector<pair<int,int>>>& 
 
 // GESTION DE LA VISITE DES CASES
 
+// marque la case comme visitée
 void Donjon::marquerVisitee(int x, int y) {
     if (!visites[x][y]) {
         visites[x][y] = true ;
@@ -283,13 +306,14 @@ void Donjon::marquerVisitee(int x, int y) {
     }
 }
 
+// renvoie le nombre de cases visitées
 int Donjon::getNbCasesVisitees() const {
     return nbCasesVisitees;
 } 
 
 
 
-// GETSIONDE LA SAUVEGARDE DANS FICHIER TEXTE
+// GETSION DE LA SAUVEGARDE DANS FICHIER TEXTE
 
 void Donjon::sauvegarder(const std::string& nomFichier) const {
     std::ofstream fichier(nomFichier) ;
